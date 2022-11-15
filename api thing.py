@@ -3,7 +3,7 @@ import json
 import time
 import serial
 
-# arduino = serial.Serial(port='COM4', baudrate=115200, timeout=.1)
+# arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
 # username = arduino.readline().decode("utf-8")
 
 username = input("Username please: ")
@@ -18,29 +18,30 @@ minPrEp = 0
 
 
 
-for i in range(len(response.json()['data'])):
-    if response.json()['data'][i-1]['entry']['type'] == "anime":
+for i in range(len(response.json()['data'])):   # get data in .json format
+    if response.json()['data'][i-1]['entry']['type'] == "anime":    # entry has to be anime not manga
         lenarr.append(json.dumps(response.json()['data'][i-1]['entry']['type'], indent=4))
-        ids.append(json.dumps(response.json()['data'][i-1]['entry']['mal_id'], indent=4))
+        ids.append(json.dumps(response.json()['data'][i-1]['entry']['mal_id'], indent=4))   # ids of animes in history
+
 print(len(lenarr))
 ids.sort()
 print(ids)
-iddict = {i:ids.count(i) for i in ids}
+iddict = {i:ids.count(i) for i in ids}  # counts duplicate ids
 print(iddict)
 keys = list(iddict.keys())
 for i in range(len(iddict)):
-    response = requests.get(f"https://api.jikan.moe/v4/anime/{keys[i-1]}")
+    response = requests.get(f"https://api.jikan.moe/v4/anime/{keys[i-1]}")  # get duration of each entry
     print(keys[i-1], iddict[keys[i-1]], "*",  response.json()['data']['duration'])
-    # minutes
+    # minutes duration of entry
     if "min" in response.json()['data']['duration']:
         minIndex = response.json()['data']['duration'].index("min")
         if minIndex >= 3:
-            minPrEp = int(response.json()['data']['duration'][minIndex - 3] + response.json()['data']['duration'][minIndex - 2])
+            minPrEp = int(response.json()['data']['duration'][minIndex - 3] + response.json()['data']['duration'][minIndex - 2])    # if entry is a movie with minutes
         elif minIndex == 2:
-            minPrEp = int(response.json()['data']['duration'][minIndex - 2])
+            minPrEp = int(response.json()['data']['duration'][minIndex - 2])    # else
         timearr.append(int(iddict[keys[i-1]]) * minPrEp)
     else:
-        minPrEp = 0
+        minPrEp = 0 # if entry is a movie without minutes
     print(int(iddict[keys[i-1]]) * minPrEp)
     # hours
     if "hr" in response.json()['data']['duration']:
@@ -48,7 +49,7 @@ for i in range(len(iddict)):
         hrPrEp = int(response.json()['data']['duration'][hrIndex - 2]) * 60
         timearr.append(int(iddict[keys[i-1]]) * hrPrEp)
     else:
-        hrPrEp = 0
+        hrPrEp = 0  # if no hours
     print(iddict[keys[i-1]] * hrPrEp)
     time.sleep(1)
 print(timearr)
