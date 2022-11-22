@@ -66,3 +66,5 @@ print(timearr)
 print(sum(timearr), "minutes of watchtime in the past 3 weeks")
 print(round(sum(timearr) / 60, 3), "hours of watchtime in the past 3 weeks")
 print("thats", round((sum(timearr)/(3*7*24*60))*100, 2), "\b% of each day")
+timearrSum = int(round(sum(timearr)))/4
+arduino.write(bytes(str(timearrSum), 'utf-8'))
