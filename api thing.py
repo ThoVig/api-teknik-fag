@@ -3,11 +3,12 @@ import json
 import time
 import serial
 
-arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
-username = arduino.readline().decode("utf-8")
-while username == "":
-    username = arduino.readline().decode("utf-8")
-    time.sleep(0.05)
+# time.sleep(3)
+# arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
+# username = arduino.readline().decode("utf-8")
+# while username == "":
+#     username = arduino.readline().decode("utf-8")
+#     time.sleep(0.05)
 
 username = input("Username please: ")
 response = requests.get(f"https://api.jikan.moe/v4/users/{username}/history")
@@ -58,4 +59,4 @@ for i in range(len(iddict)):
 print(timearr)
 print(sum(timearr), "minutes of watchtime in the past 3 weeks")
 print(round(sum(timearr) / 60, 3), "hours of watchtime in the past 3 weeks")
-print("thats", round((sum(timearr)/(3*7*24*60))*100, 2), "percent of each day")
+print("thats", round((sum(timearr)/(3*7*24*60))*100, 2), "\b% of each day")
