@@ -3,8 +3,11 @@ import json
 import time
 import serial
 
-# arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
-# username = arduino.readline().decode("utf-8")
+arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
+username = arduino.readline().decode("utf-8")
+while username == "":
+    username = arduino.readline().decode("utf-8")
+    time.sleep(0.05)
 
 username = input("Username please: ")
 response = requests.get(f"https://api.jikan.moe/v4/users/{username}/history")
