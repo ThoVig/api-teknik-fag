@@ -3,14 +3,17 @@ import json
 import time
 import serial
 
-# time.sleep(3)
-# arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
-# username = arduino.readline().decode("utf-8")
-# while username == "":
-#     username = arduino.readline().decode("utf-8")
-#     time.sleep(0.05)
+time.sleep(3)
+arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+username = arduino.readline().decode("utf-8")
+while username == "":
+    print(arduino.readline().decode("utf-8"))
+    username = arduino.readline().decode("utf-8")
+    time.sleep(0.05)
+username = username.strip()
+print("got it", username)
 
-username = input("Username please: ")
+# username = input("Username please: ")
 response = requests.get(f"https://api.jikan.moe/v4/users/{username}/history")
 print(response)
 
@@ -21,11 +24,14 @@ hrPrEp = 0
 minPrEp = 0
 
 
-
-for i in range(len(response.json()['data'])):   # get data in .json format
-    if response.json()['data'][i-1]['entry']['type'] == "anime":    # entry has to be anime not manga
-        lenarr.append(json.dumps(response.json()['data'][i-1]['entry']['type'], indent=4))
-        ids.append(json.dumps(response.json()['data'][i-1]['entry']['mal_id'], indent=4))   # ids of animes in history
+try:
+    for i in range(len(response.json()['data'])):   # get data in .json format
+        if response.json()['data'][i-1]['entry']['type'] == "anime":    # entry has to be anime not manga
+            lenarr.append(json.dumps(response.json()['data'][i-1]['entry']['type'], indent=4))
+            ids.append(json.dumps(response.json()['data'][i-1]['entry']['mal_id'], indent=4))   # ids of animes in history
+except:
+    print("please try again")
+    exit()
 
 print(len(lenarr))
 ids.sort()
