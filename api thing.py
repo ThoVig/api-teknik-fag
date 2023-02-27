@@ -4,7 +4,7 @@ import time
 import serial
 
 time.sleep(3)
-arduino = serial.Serial(port='COM17', baudrate=9600, timeout=.1)
+arduino = serial.Serial(port='COM3', baudrate=9600, timeout=.1)
 username = arduino.readline().decode("utf-8")
 while username == "":
     print(arduino.readline().decode("utf-8"))
@@ -66,5 +66,7 @@ print(timearr)
 print(sum(timearr), "minutes of watchtime in the past 3 weeks")
 print(round(sum(timearr) / 60, 3), "hours of watchtime in the past 3 weeks")
 print("thats", round((sum(timearr)/(3*7*24*60))*100, 2), "\b% of each day")
-timearrSum = int(round(sum(timearr)))/4
+timearrSum = int(round(sum(timearr))/4)
 arduino.write(bytes(str(timearrSum), 'utf-8'))
+print(timearrSum)
+print(bytes(str(timearrSum), 'utf-8'))
